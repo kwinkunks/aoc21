@@ -2,12 +2,16 @@ let data;
 let test;
 
 function preload() {
+	// These are asynchronous and can't be used yet.
+	// These load strings.
 	test = loadStrings('./test.txt');
 	data = loadStrings('./data.txt');
 }
 
 function setup() {
 	createCanvas(windowWidth, windowHeight);
+
+  // Get the points out.
   test = test.slice(0, -1).map(x => x.split(' -> ').map(y => y.split(',').map(Number)));
   data = data.slice(0, -1).map(x => x.split(' -> ').map(y => y.split(',').map(Number)));
 	part1(test, data);
@@ -37,39 +41,45 @@ function countOverlapsHV(lines) {
 }
 
 function countOverlaps(lines) {
+  // Well, this is a bit of a mess.
+  // Reverting to my first non-elegant solution.
+  // Making it adaptive.
   let marked = new Map;
-  for (let [p, q] of lines) {
-    let points = interpolate(p, q);
-    for (let point of points) {
-      let value = marked.get(String(point)) | 0;
-      marked.set(String(point), value + 1);
+  let z;
+  for (let [a, b] of lines) {
+
+    if (a[0] > b[0]) {
+      [a, b] = [b, a];
+      z = 0;
+    } else if (a[0] == b[0]) {
+      z = 1;
+      if (a[1] > b[1]) {
+        [a, b] = [b, a];
+      }
+    } else {
+      z = 0;
+    }
+
+    j = a[1-z]
+    for (let i = a[z]; i <= b[z]; i++) {
+      if (z == 0) {
+        let v = marked.get(String([i, j])) || 0;
+        marked.set(String([i, j]), v + 1);
+      } else {
+        let v = marked.get(String([j, i])) || 0;
+        marked.set(String([j, i]), v + 1);
+      }
+      if (a[1-z] < b[1-z]) {
+        j++;
+      } else if (a[1-z] > b[1-z]) {
+        j--;
+      } else {
+        // Do nothing
+      }
+
     }
   }
+
   const overlaps = new Map([...marked].filter(([k, v]) => v > 1));
-  console.log(overlaps);
   return overlaps.size;
-}
-
-function interpolate(p, q) {
-  // Interpolate between two points.
-  p = createVector(p[0], p[1]);
-  q = createVector(q[0], q[1]);
-
-  // Deal with zero-length lines.
-  if (p.equals(q)) {
-    return Array(p);
-  }
-
-  // Chebyshev distance, L_inf norm.
-  let v = p.copy().sub(q);
-  let chebyshev = max(v.array().map(abs));
-
-  // Interpolate.
-  let points = new Array;
-  for (i = 0; i <= chebyshev; i++) {
-    let x = lerp(p.x, q.x, i/chebyshev);
-    let y = lerp(p.y, q.y, i/chebyshev);
-    points.push([x, y]);
-  }
-  return points;
 }

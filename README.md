@@ -19,3 +19,7 @@ But! Although I've stuck it out longer than Julia, I have just not had quality t
 - **Day 7** &mdash; Python: a one-liner for Part 1, and what I thought was a cunning use of outer-subtraction for part 2. No time to do today in JS.
 - **Day 8** &mdash; Part 1 was straightforward, Part 2 seems quite tricky. I like the idea of it, but staring at it for 10 minutes didn't get me much past knowing a few of the digits. Have not really tried putting code on paper.
 - **Day 9** &mdash; I liked this one, although it's quite a quick one if you allow yourself to use image processing tools. Could immediately see a solution in Python (using `scipy.ndimage`) so went straight to it. Have not tried in JavaScript... Part 1 will be simple enough, Part 2 a little fiddly.
+
+No time over the weekend, so here I am on Monday, late as usual.
+
+- **Day 13** &mdash; I really liked this one. Thought about affine transforms, as I've been using those a bit lately. Then I thought about just computing the new position of every point. But in the end went for slicing and flipping NumPy arrays. Part 2 was the easiest so far, thank goodness.
